@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-anton {
+  font-family: var(--font-anton);
+}
+
+button,
+a {
+  user-select: none;
+}
+
+.time-anim {
+  /* hover:translate-x-2  */
+  @apply duration-300 active:scale-95;
+}
+
+.show-time-controller {
+  /* group-hover:-translate-x-2 */
+  @apply duration-300 group-hover:translate-x-4 group-hover:pointer-events-auto group-hover:opacity-100;
+}
+
+.hidden-time-controller {
+  /* group-hover:-translate-x-2 */
+  @apply translate-x-0 opacity-0 pointer-events-none;
+}
+
+/* Scrollbar */
+
+#style-1::-webkit-scrollbar-track {
+  margin-block: 1rem;
+  border-radius: 10px;
+  background-color: #cbd5e1;
+}
+
+#style-1::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+#style-1::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #94a3b8;
+}
+/* ... Scrollbar */
+
+/* Marquee */
+
+.marquee-text {
+  padding-inline: 1rem;
+  display: inline-block;
+}
+
+.todo-text {
+  display: inline-block;
+}
+
+.todo-fade {
+  display: none;
+}
+
+.marquee-container:hover .marquee-text {
+  animation: marquee 5s linear infinite;
+}
+
+.marquee-container:hover .todo-text {
+  display: none;
+}
+
+.marquee-container:hover .todo-fade {
+  display: flex;
+}
+
+/* ... Marquee */
+
+@keyframes marquee {
+  0% {
+    transform: translate(0%, -2px);
+  }
+  100% {
+    transform: translate(-100%, -2px);
+  }
+}
+
+/* ... Marquee */
+
+/* Truncate */
+.truncate-2-lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
