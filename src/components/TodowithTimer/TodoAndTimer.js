@@ -91,7 +91,7 @@ const TodoAndTimer = () => {
                 : " bg-[#91c5ea]"
             }
  
-            px-6 py-3 text-white rounded-full w-fit`}
+            px-6 py-3 text-white rounded-full w-fit font-semibold`}
         >
           {!form ? "+ New ToDo" : "Save"}
         </button>

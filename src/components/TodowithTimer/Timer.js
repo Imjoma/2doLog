@@ -3,6 +3,9 @@
 import { Antonio } from "next/font/google";
 const antonio = Antonio({ weight: "400", subsets: ["latin"] });
 
+import { Anton } from "next/font/google";
+const anton = Anton({ weight: "400", subsets: ["latin"] });
+
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -156,6 +159,7 @@ const Timer = () => {
         <div
           onDoubleClick={() => setTimeController((state) => !state)}
           className={`
+           ${anton.className}
             ${
               timeController
                 ? "-translate-x-4"

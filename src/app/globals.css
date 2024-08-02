@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.no-scroll {
+  overflow: hidden;
+}
+
 .font-anton {
   font-family: var(--font-anton);
+}
+
+.font-antonio {
+  font-family: var(--font-antonio);
 }
 
 button,

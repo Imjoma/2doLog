@@ -1,13 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { Antonio } from "next/font/google";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const antonio = Antonio({ subsets: ["latin"] });
 
-const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
+const IdeaItem = ({ item, setDataCount, setEditIdea, setShowForm }) => {
   const [itemControll, setItemControll] = useState(false);
+  const pathname = usePathname();
+
+  // User Signed In
+  const { data } = useSession();
+  const currentUserName = data?.user.name;
+  const isOP = currentUserName === item.username;
 
   // Delete Item
   const handleDelete = async (id) => {
@@ -23,6 +32,7 @@ const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
 
   // Edit Item
   const handleReadyItem = (item) => {
+    setShowForm(true);
     setEditIdea(item);
     setItemControll(false);
   };
@@ -30,7 +40,8 @@ const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
   return (
     <div className="relative flex flex-col space-y-3 sm:space-y-0 sm:space-x-5 sm:flex-row">
       {/* LEFT */}
-      <div className="h-32 overflow-hidden  bg-black w-52 rounded-xl sm:w-80">
+      {/* 52 32 */}
+      <div className="w-full h-auto overflow-hidden bg-black aspect-video rounded-xl sm:w-80">
         {item.image && (
           <img
             src={`data:image/png;base64,${item.image}`}
@@ -41,15 +52,17 @@ const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
       </div>
 
       {/* Top Right */}
-      <div className="absolute right-0 top-1 ">
-        <button
-          onClick={() => setItemControll((state) => !state)}
-          className="w-6 h-6 bg-center bg-no-repeat bg-cover rounded-full hover:bg-slate-200"
-          style={{
-            backgroundImage: `url(assets/icons/more-vertical.svg)`,
-          }}
-        ></button>
-      </div>
+      {pathname === "/" && (
+        <div className="absolute right-3 top-1 ">
+          <button
+            onClick={() => setItemControll((state) => !state)}
+            className="w-6 h-6 bg-center bg-no-repeat bg-cover rounded-full hover:bg-slate-200"
+            style={{
+              backgroundImage: `url(assets/icons/more-vertical.svg)`,
+            }}
+          ></button>
+        </div>
+      )}
 
       {/* Top Right : Item Controll */}
       {itemControll && (
@@ -75,10 +88,11 @@ const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
           {/* title */}
           <div
             className={
-              antonio.className + " text-xl truncate w-full sm:w-64 md:w-full"
+              antonio.className +
+              " text-xl hover:underline truncate w-full sm:w-64 md:w-full lg:w-[10rem] xl:w-full"
             }
           >
-            {item.title}
+            <Link href={`/idea-log/${item._id}`}>{item.title}</Link>
           </div>
           {/* description */}
           <p className="inline-block w-full sm:w-64 md:w-full truncate-2-lines">
@@ -88,15 +102,41 @@ const IdeaItem = ({ item, setDataCount, setEditIdea }) => {
 
         {/* Lower */}
         <div className="flex flex-row items-center justify-between pt-1">
-          {/* visibility */}
-          <div className="flex flex-row items-center space-x-1">
-            <div
-              className="w-5 h-5 bg-center bg-no-repeat bg-cover rounded-full"
-              style={{
-                backgroundImage: `url(assets/icons/visibilityIcon.svg)`,
-              }}
-            ></div>
-            <p>{item.visibility}</p>
+          {/* user and visibility */}
+          <div className="flex flex-row space-x-2">
+            {pathname === "/idea-log" ? (
+              <>
+                <img
+                  className="w-6 h-6 rounded-full"
+                  src={item.userImage}
+                  alt={item.username + " profile picture"}
+                />
+                <span>•</span>
+                <p className="font-medium ">{item.username}</p>
+              </>
+            ) : (
+              !isOP && (
+                <>
+                  <img
+                    className="w-6 h-6 rounded-full"
+                    src={item.userImage}
+                    alt={item.username + " profile picture"}
+                  />
+                  <span>•</span>
+                </>
+              )
+            )}
+            {pathname !== "/idea-log" && (
+              <div className="flex flex-row items-center space-x-1">
+                <div
+                  className="w-5 h-5 bg-center bg-no-repeat bg-cover rounded-full"
+                  style={{
+                    backgroundImage: `url(assets/icons/visibilityIcon.svg)`,
+                  }}
+                ></div>
+                <p>{item.visibility}</p>
+              </div>
+            )}
           </div>
           {/* date */}
           <p className="text-sm font-medium opacity-60">

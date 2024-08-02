@@ -31,7 +31,8 @@ const ideaSlice = createSlice({
   initialState,
   reducers: {
     addIdea: (state, action) => {
-      const { image, title, description, visibility } = action.payload;
+      const { image, title, description, visibility, username, userImage } =
+        action.payload;
 
       state.list.push({
         id: uuidv4(),
@@ -40,6 +41,8 @@ const ideaSlice = createSlice({
         description,
         visibility,
         date: new Date(),
+        username,
+        userImage,
       });
     },
   },
@@ -52,6 +55,7 @@ const ideaSlice = createSlice({
         state.status = "succeeded";
         state.list = action.payload;
       })
+
       .addCase(fetchIdeas.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -59,10 +63,11 @@ const ideaSlice = createSlice({
   },
 });
 
-export const { addIdea } = ideaSlice.actions;
+export const { addIdea, updateIdea } = ideaSlice.actions;
 export default ideaSlice.reducer;
 
 // Optionally export selectors if needed
 export const selectAllIdeas = (state) => state.ideas.list;
 export const selectIdeasStatus = (state) => state.ideas.status;
 export const selectIdeasError = (state) => state.ideas.error;
+export const selectIdeasUpdated = (state) => state.ideas.list;

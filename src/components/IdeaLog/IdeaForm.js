@@ -6,7 +6,13 @@ import { useSession } from "next-auth/react";
 
 import { useState, useEffect } from "react";
 
-const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
+const IdeaForm = ({
+  editIdea,
+  setDataCount,
+  handleUpdate,
+  setEditIdea,
+  setShowForm,
+}) => {
   const [base64String, setBase64String] = useState("");
   const [maxSize, setMaxSize] = useState(false);
 
@@ -56,6 +62,8 @@ const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
           description,
           visibility,
           date: new Date(),
+          username: currentUserName,
+          userImage: currentUserImage,
         }),
       });
       e.target.reset();
@@ -108,12 +116,24 @@ const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
     setVisibility("Public");
   };
 
+  const handleUpdateClick = () => {
+    handleUpdate(updatedIdea);
+    handleClearState();
+  };
+
   return (
     <>
       <form
         onSubmit={handleSubmitIdea}
-        className="flex w-full p-4 bg-white sm:p-6 rounded-xl"
+        className="relative flex w-full p-4 bg-white sm:p-6 rounded-xl"
       >
+        {/* Close Form */}
+        <button
+          className="absolute w-5 h-5 bg-center bg-no-repeat bg-cover top-6 right-6 "
+          style={{ backgroundImage: `url(assets/icons/close.svg)` }}
+          onClick={() => setShowForm(false)}
+          type="button"
+        ></button>
         {/* profile PC */}
         <img
           src={currentUserImage}
@@ -126,12 +146,11 @@ const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
           <img
             src={currentUserImage}
             alt={currentUserName + "profile image"}
-            src="https://images.pexels.com/photos/18008779/pexels-photo-18008779/free-photo-of-trees-over-street.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             className="inline-block w-10 h-10 border rounded-full sm:hidden -p-1 bg-slate-200"
           />
           {/* title */}
           <input
-            maxLength={60}
+            maxLength={50}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             type="text"
@@ -159,10 +178,10 @@ const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
           {/* description */}
           <div className="w-full pt-2">
             <textarea
-              maxLength={250}
+              maxLength={1000}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 border rounded-xl"
+              className="w-full px-3 py-2 border outline-none focus:border-none focus:ring-2 rounded-xl"
               name="description"
               id="description"
               placeholder="Description"
@@ -215,11 +234,7 @@ const IdeaForm = ({ editIdea, setDataCount, handleUpdate, setEditIdea }) => {
                     handleSomethingEdit() === false && "opacity-40"
                   } px-6 py-3 w-full md:w-fit bg-green-500 rounded-full text-white`}
                   type="button"
-                  onClick={() =>
-                    handleUpdate(updatedIdea) &&
-                    setDataCount((state) => state + 1) &&
-                    handleClearState
-                  }
+                  onClick={handleUpdateClick}
                 >
                   Update
                 </button>
