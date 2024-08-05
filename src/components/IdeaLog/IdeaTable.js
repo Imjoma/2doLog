@@ -104,18 +104,21 @@ const IdeaTable = ({ showForm, setShowForm, search }) => {
       {/* Authentication Modal */}
       {modal && <SignInModal closeModal={closeModal} />}
 
-      {status === "loading" && (
-        <div className="flex items-center justify-center px-6 py-8">
-          <div className="p-2 border bg-slate-500 rounded-xl bg-opacity-30">
-            <div
-              className="w-8 h-8 bg-no-repeat bg-cover rounded-xl"
-              style={{
-                backgroundImage: `url(assets/icons/loading.svg)`,
-              }}
-            ></div>
+      {!ideaList ||
+        !originalPost ||
+        isDashboard ||
+        (status === "loading" && (
+          <div className="flex items-center justify-center px-6 py-8">
+            <div className="p-2 border bg-slate-500 rounded-xl bg-opacity-30">
+              <div
+                className="w-8 h-8 bg-no-repeat bg-cover rounded-xl"
+                style={{
+                  backgroundImage: `url(assets/icons/loading.svg)`,
+                }}
+              ></div>
+            </div>
           </div>
-        </div>
-      )}
+        ))}
 
       {pathname === "/" &&
         status === "authenticated" &&
