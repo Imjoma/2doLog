@@ -7,15 +7,21 @@ import { Anton } from "next/font/google";
 const anton = Anton({ weight: "400", subsets: ["latin"] });
 
 import { useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 import { useState, useEffect } from "react";
 
 import CurrentTodo from "./CurrentTodo";
 
 const Timer = () => {
-  const todoList = useSelector((state) =>
-    state.todos.list.filter((state) => state.isDone === false)
+  const todoList = (state) => state.todos.list;
+
+  const todoListNotDone = createSelector([todoList], (todos) =>
+    todos.filter((todo) => todo.isDone === false)
   );
-  const timeSelected = todoList[0]?.time * 60;
+
+  const filteredTodo = useSelector(todoListNotDone);
+
+  const timeSelected = filteredTodo[0]?.time * 60;
 
   const [timeController, setTimeController] = useState(false);
 
@@ -36,7 +42,7 @@ const Timer = () => {
   // simple approach to change the time, based on the first todo item
   useEffect(() => {
     if (!isFocus) return;
-    if (todoList[0] === undefined) {
+    if (filteredTodo[0] === undefined) {
       return setTimer((state) => ({
         ...state,
         isActive: false,
@@ -45,7 +51,7 @@ const Timer = () => {
         seconds: 0,
       }));
     }
-    let minutes = todoList[0].time;
+    let minutes = filteredTodo[0].time;
     let seconds = minutes * 60;
 
     setTimer((state) => ({
@@ -55,7 +61,7 @@ const Timer = () => {
       minutes: minutes === 0 ? 25 : minutes,
       seconds: 0,
     }));
-  }, [todoList[0]]);
+  }, [filteredTodo[0]]);
 
   // Timer controllers:  running || pause || reset
   const handleReset = () => {

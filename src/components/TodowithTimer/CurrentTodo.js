@@ -1,12 +1,17 @@
 import { useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 import { useState, useEffect } from "react";
 
 const CurrentTodo = ({ font, isFocus }) => {
-  const todoList = useSelector((state) =>
-    state.todos.list.filter((state) => state.isDone === false)
+  const todoList = (state) => state.todos.list;
+
+  const todoListNotDone = createSelector([todoList], (todos) =>
+    todos.filter((todo) => todo.isDone === false)
   );
 
-  const currentTodo = todoList[0]?.todoName;
+  const filteredTodo = useSelector(todoListNotDone);
+
+  const currentTodo = filteredTodo[0]?.todoName;
   const fixedTodo = "⏲️ Pomodoro is the goat";
   const isBreak = !isFocus ? "Mandatory breaks" : currentTodo;
 

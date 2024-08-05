@@ -71,11 +71,11 @@ export default function Home() {
             </div>
           )}
 
-          <IdeaTable
+          {/* <IdeaTable
             search={search}
             showForm={showForm}
             setShowForm={setShowForm}
-          />
+          /> */}
         </div>
 
         {mount ? <TodoAndTimer /> : <SkeletonTodoContainer />}
